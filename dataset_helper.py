@@ -80,3 +80,24 @@ def get_row_ids_containing_salad_in_name_or_as_tag(df):
 def create_salad_dataset(df):
     index_list = get_row_ids_containing_salad_in_name_or_as_tag(df)
     return df.loc[index_list].reset_index(drop=True)
+
+def change_df_ingredients_column_to_list(df):
+    if(type(df.loc[0,'ingredients']) == list):
+        return
+    for j in range(len(df)):
+        ingredients_chars = df.loc[j, 'ingredients']
+        ingredients_list = []
+        i = 0
+        while(i < len(ingredients_chars)):
+            if(ingredients_chars[i] == "'"):
+                i += 1
+                char_tag = []
+                while(ingredients_chars[i] != "'"):
+                    char_tag.append(ingredients_chars[i])
+                    i += 1
+                tag = ''.join(char_tag)
+                ingredients_list.append(tag)
+                i +=1
+            else:
+                i += 1 
+        df.loc[j, 'ingredients'] = ingredients_list
