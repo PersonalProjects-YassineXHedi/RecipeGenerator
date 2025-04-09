@@ -69,7 +69,21 @@ def matching_ingredient_counter_on_df(ingredients, df):
     sorted_dict = dict(sorted(matching_ingredient_df.items(), key=lambda item: item[1], reverse=True))
     return sorted_dict
         
+def matching_ingredient_counter_on_df(ingredients, df):
+    matching_ingredient_df = {}
+    for index, row in df.iterrows():
+        count = matching_ingredient_counter_on_row(ingredients, row)
+        matching_ingredient_df[index] = count
+    sorted_dict = dict(sorted(matching_ingredient_df.items(), key=lambda item: item[1], reverse=True))
+    return sorted_dict
 
+def matching_tags_counter_on_df(tags, df):
+    matching_ingredient_df = {}
+    for index, row in df.iterrows():
+        count = matching_tags_counter_on_row(tags, row)
+        matching_ingredient_df[index] = count
+    sorted_dict = dict(sorted(matching_ingredient_df.items(), key=lambda item: item[1], reverse=True))
+    return sorted_dict
 
             
     
