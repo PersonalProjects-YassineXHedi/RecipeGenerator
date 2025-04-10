@@ -69,6 +69,6 @@ def visulize_ingridient(df_sorted_ingridient=df_sorted_ingridient(get_salad_data
 
 
 
-visulize_ingridient(df_sorted_ingridient(get_salad_dataset(DATA_PATH)))
+# visulize_ingridient(df_sorted_ingridient(get_salad_dataset(DATA_PATH)))
 
 
