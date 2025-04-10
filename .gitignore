@@ -1,4 +1,4 @@
-.gitignore.txt
 .ipynb_checkpoints/
 __pycache__/
 data_view.ipynb
+test.py
