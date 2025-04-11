@@ -1,0 +1,64 @@
+import matplotlib as plt
+import pandas as pd
+
+def ingredient_frequency_graph(df):
+    """
+    Visualizes the top 80 most common ingredients in a bar chart.
+
+    Args:
+        df_sorted_ingridient (pandas.DataFrame): A DataFrame that must contain 
+            at least two columns: 'ingredient' (str) and 'count' (int), 
+            sorted in descending order by 'count'.
+
+    Returns:
+        None: Displays a bar chart of ingredient counts.
+    """
+    df_sorted_ingridient = sorted_ingridient_counter_df(df)
+    df_sorted_ingridient = df_sorted_ingridient.head(80)
+    plt.figure(figsize=(20, 8))
+    plt.bar(df_sorted_ingridient['ingredients'], df_sorted_ingridient['count'])
+    plt.xlabel('Ingredients', fontsize=6)
+    plt.ylabel('Count')
+    plt.title('Ingredient Count (Sorted)')
+    plt.xticks(rotation=90, fontsize=6)
+    plt.tight_layout()
+    plt.show()
+
+
+# private method
+def sorted_ingridient_counter_df(df):
+    '''
+
+    Private methods
+
+    Counts how often each ingredient appears in the 'ingredients' column and returns a sorted DataFrame.
+
+    Args:
+        df (pd.DataFrame): A DataFrame with a column 'ingredients', where each row contains a list of strings.
+
+    Returns:
+        pd.DataFrame: A DataFrame with columns 'ingredient' and 'count', sorted by count in descending order.
+    '''
+    df_ingredient = {
+        "ingredients":[],
+        "count":[]
+    }
+
+    for j in range(len(df)):
+        list_ingredients = df.loc[j, 'ingredients']
+        for i in range (len(list_ingredients)):
+            not_found = True
+            ingredient = list_ingredients[i]
+            for _ in list_ingredients:
+                if ingredient in df_ingredient["ingredients"]:
+                    not_found = False
+                    index = df_ingredient["ingredients"].index(ingredient)
+                    df_ingredient["count"][index] += 1
+                    break
+            if not_found:
+                df_ingredient["ingredients"].append(ingredient)
+                df_ingredient["count"].append(1)
+
+    df_ingredient = pd.DataFrame(df_ingredient)   
+    df_sorted = df_ingredient.sort_values(by=['count'], ascending=False)   
+    return df_sorted
