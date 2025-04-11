@@ -3,8 +3,6 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.max_colwidth', None)     
 pd.set_option('display.width', None)  
 
-DATA_PATH = "C:/Users/yassi/Desktop/Projet/CookBotProject/CookBotRecipes/Data/archive/RAW_recipes.csv"
-
 def get_all_available_tags(df):
     available_tag = []
     for j in range(len(df)):

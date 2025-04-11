@@ -2,8 +2,7 @@ import pandas as pd
 from dataset_helper import change_df_tags_column_to_list, change_df_ingredients_column_to_list, create_salad_dataset
 
 def get_salad_dataset(path_data_folder):
-    recipes_file_path = path_data_folder + "/salad_dataset.csv"
-    return pd.read_csv(recipes_file_path)
+    return pd.read_csv(path_data_folder)
 
 def get_dataset_with_specific_columns(df, column_list):
     return df[column_list]

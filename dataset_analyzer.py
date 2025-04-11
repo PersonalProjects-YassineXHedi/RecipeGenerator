@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 def get_recipes_with_ingredients(ingredients, df):
     recipes_index = []
     for index, row in df.iterrows():
@@ -99,6 +100,15 @@ def replace_df_ingredients_with_keywords(keywords_to_remove, df):
     return df 
 
 def sorted_ingridient_counter_df(df):
+    '''
+    Counts how often each ingredient appears in the 'ingredients' column and returns a sorted DataFrame.
+
+    Args:
+        df (pd.DataFrame): A DataFrame with a column 'ingredients', where each row contains a list of strings.
+
+    Returns:
+        pd.DataFrame: A DataFrame with columns 'ingredient' and 'count', sorted by count in descending order.
+    '''
     df_ingredient = {
         "ingredient":[],
         "count":[]
@@ -127,7 +137,19 @@ def sorted_ingridient_counter_df(df):
     df_sorted = df_ingredient.sort_values(by=['count'], ascending=False)   
     return df_sorted
 
-def visulize_ingridient(df_sorted_ingridient, ):
+def visulize_ingridient(df_sorted_ingridient):
+     """
+    Visualizes the top 80 most common ingredients in a bar chart.
+
+    Args:
+        df_sorted_ingridient (pandas.DataFrame): A DataFrame that must contain 
+            at least two columns: 'ingredient' (str) and 'count' (int), 
+            sorted in descending order by 'count'.
+
+    Returns:
+        None: Displays a bar chart of ingredient counts.
+    """
+     
     df_sorted_ingridient = df_sorted_ingridient.head(80)
     plt.figure(figsize=(20, 8))
     plt.bar(df_sorted_ingridient['ingredient'], df_sorted_ingridient['count'])
@@ -135,6 +157,5 @@ def visulize_ingridient(df_sorted_ingridient, ):
     plt.ylabel('Count')
     plt.title('Ingredient Count (Sorted)')
     plt.xticks(rotation=90, fontsize=6)
-    
     plt.tight_layout()
     plt.show()
