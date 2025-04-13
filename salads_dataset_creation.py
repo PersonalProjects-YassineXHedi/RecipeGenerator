@@ -42,7 +42,7 @@ def save_df_csv(df, file_name, path_data_folder):
 
 def get_salad_dataset(path_data_folder):
     '''
-        Private methods
+        Private method
 
         Loads the base salad dataset from a CSV file.
 
@@ -57,7 +57,7 @@ def get_salad_dataset(path_data_folder):
 
 def get_dataset_with_specific_columns(df, column_list):
     '''
-        Private methods
+        Private method
 
         Selects specific columns from the provided DataFrame.
 
