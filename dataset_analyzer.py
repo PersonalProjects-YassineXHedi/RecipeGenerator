@@ -226,8 +226,6 @@ def remove_keyword_from_ingredient_row(keywords_to_remove, row):
         modified_ingredients.append(final_word)
     return modified_ingredients
 
-<<<<<<< Updated upstream
-=======
 def sorted_ingridient_counter_df(df):
     df_ingredient = {
         "ingredient":[],
@@ -285,4 +283,3 @@ def is_row_to_remove(ingredients_to_remove, row):
         if ingredient in ingredients_to_remove:
             return True
     return False
->>>>>>> Stashed changes
