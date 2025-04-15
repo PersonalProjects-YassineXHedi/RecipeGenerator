@@ -50,4 +50,23 @@ def remove_elem_from_list(list_elem_to_remove,full_list):
             list_elem_to_leave.append(elem)
     return list_elem_to_leave
 
+def get_elem_from_df_from_start_index(start_index, df):
+    """
+    Retrieves elements from the 'key' column of a DataFrame starting from a given index
+    to the end of the DataFrame.
+
+    Args:
+        start_index (int): The row index to start extracting from.
+        df (pd.DataFrame): DataFrame containing a 'key' column.
+
+    Returns:
+        list: List of elements from the 'key' column starting at start_index.
+    """
+    i = start_index
+    elem_list = []
+    while(i < len(df)):
+        elem_list.append(df.loc[i,'key'])
+        i += 1
+    return elem_list
+
 

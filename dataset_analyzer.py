@@ -37,22 +37,25 @@ def get_df_filtered_without_list_ingredients(ingredients_to_remove, df):
     return df.loc[valid_indices].reset_index(drop=True)
 
 
-def replace_df_ingredients_with_keywords(keywords, df):
+def replace_df_ingredients_with_keywords(keywords, exceptions, df):
     """
-    Replaces ingredients in all the DataFrame using matching keywords. When the keyword (single word)
-    is found in an ingredient (multiple words) the old ingredient is replaced by the keyword.
+    Replaces ingredients in the entire DataFrame using matching keywords.
+
+    Each ingredient is replaced by a keyword if that keyword is found as a full word within the ingredient.
+    Ingredients that are present in the exceptions list are left unchanged.
 
     Args:
         keywords (list): List of keywords to match and replace.
+        exceptions (list): List of ingredient phrases to exclude from replacement.
         df (pd.DataFrame): DataFrame with a column 'ingredients' containing ingredient lists.
 
     Returns:
         pd.DataFrame: Updated DataFrame with modified ingredients.
     """
     for index, row in df.iterrows():
-        modified_ingredients = replace_row_ingredient_with_keywords(keywords,row)
-        df.loc[index , 'ingredients'] = modified_ingredients
-    return df 
+        modified_ingredients = replace_row_ingredient_with_keywords(keywords, exceptions, row)
+        df.at[index, 'ingredients'] = modified_ingredients
+    return df
 
 def replace_old_ingredients_with_new_df(dict_old_new_value, df):
     """
@@ -145,26 +148,33 @@ def check_recipe_with_ingredients(ingredients, row):
             return False
     return True
 
-def replace_row_ingredient_with_keywords(keywords, row):
+def replace_row_ingredient_with_keywords(keywords, exceptions, row):
     """
     Private method
 
-    Replaces words in each ingredient of the row with a matching keyword if found.
+    Replaces any ingredient in the row with a matching keyword if the keyword matches a full word
+    in the ingredient. Ingredients listed in the exceptions list are left unchanged.
 
     Args:
         keywords (list): List of keywords to match and replace.
+        exceptions (list): List of ingredient phrases to exclude from replacement.
         row (pd.Series): A row from the DataFrame with a key 'ingredients'.
 
     Returns:
-        list: Modified list of ingredients where matching words are replaced with the keyword.
+        list: Modified list of ingredients where matching keywords replace ingredients,
+              except for those in the exceptions list.
     """
     recipe_ingredients = row['ingredients']
     modified_ingredients = []
     for ingredient in recipe_ingredients:
+        if ingredient in exceptions:
+            modified_ingredients.append(ingredient)
+            continue
+
         words = ingredient.split()
         was_replaced = False
         for keyword in keywords:
-            if(keyword in words):
+            if keyword in words:
                 modified_ingredients.append(keyword)
                 was_replaced = True
                 break
@@ -225,36 +235,6 @@ def remove_keyword_from_ingredient_row(keywords_to_remove, row):
         final_word = ' '.join(new_ingredient_words).strip()
         modified_ingredients.append(final_word)
     return modified_ingredients
-
-def sorted_ingridient_counter_df(df):
-    df_ingredient = {
-        "ingredient":[],
-        "count":[]
-    }
-
-    # iterate through the rows of the dataframe
-    for j in range(len(df)):
-        list_ingredients = df.loc[j, 'ingredients']
-        # iterate through the list of ingredients
-        for i in range (len(list_ingredients)):
-            not_found = True
-            ingredient = list_ingredients[i]
-            # check if the ingredient is already in the list
-            for item in list_ingredients:
-                if ingredient in df_ingredient["ingredient"]:
-                    not_found = False
-                    index = df_ingredient["ingredient"].index(ingredient)
-                    df_ingredient["count"][index] += 1
-                    break
-            # if not in list append
-            if not_found:
-                df_ingredient["ingredient"].append(ingredient)
-                df_ingredient["count"].append(1)
-
-    df_ingredient = pd.DataFrame(df_ingredient)   
-    df_sorted = df_ingredient.sort_values(by=['count'], ascending=False)   
-    return df_sorted
-
 
 def get_all_words_in_ingredients_row(row):
     """
