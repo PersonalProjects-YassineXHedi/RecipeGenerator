@@ -1,12 +1,12 @@
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
 from dataset_helper import change_df_tags_column_to_list, change_df_ingredients_column_to_list, create_salad_dataset
 
-DATA_PATH = "/home/hboua/GitRepo/Data"
+DATA_PATH_HEDI = "/home/hboua/GitRepo/Data"
+DATA_PATH_YASSINE = "C:/Users/yassi/Desktop/Projet/CookBotProject/CookBotRecipes/Data"
+
 def get_salad_dataset(path_data_folder):
     recipes_file_path = path_data_folder + "/salad_dataset.csv"
-    print(recipes_file_path)
     return pd.read_csv(recipes_file_path)
 
 def get_dataset_with_specific_columns(df, column_list):
@@ -24,7 +24,7 @@ def save_df_csv(df, file_name, path_data_folder):
     file_path = path_data_folder + '/' + file_name + '.csv'
     df.to_csv(file_path, index=False)
 
-def df_sorted_ingridient(df=get_salad_dataset(DATA_PATH)):
+def ingredient_counter_on_df(df):
     change_df_ingredients_column_to_list(df)
     df_ingredient = {
         "ingredient":[],
@@ -67,8 +67,48 @@ def visulize_ingridient(df_sorted_ingridient=df_sorted_ingridient(get_salad_data
     plt.tight_layout()
     plt.show()
 
+def matching_ingredient_counter_on_row(ingredients, row):
+    list_ingredients = row['ingredients']
+    count = 0
+    for ingredient in list_ingredients:
+        if(ingredient in ingredients):
+            count += 1
+    return count
 
+def matching_tags_counter_on_row(tags, row):
+    list_tags = row['tags']
+    count = 0
+    for tag in list_tags:
+        if(tag in tags):
+            count += 1
+    return count
 
-# visulize_ingridient(df_sorted_ingridient(get_salad_dataset(DATA_PATH)))
+def matching_ingredient_counter_on_df(ingredients, df):
+    matching_ingredient_df = {}
+    for index, row in df.iterrows():
+        count = matching_ingredient_counter_on_row(ingredients, row)
+        matching_ingredient_df[index] = count
+    sorted_dict = dict(sorted(matching_ingredient_df.items(), key=lambda item: item[1], reverse=True))
+    return sorted_dict
+        
+def matching_ingredient_counter_on_df(ingredients, df):
+    matching_ingredient_df = {}
+    for index, row in df.iterrows():
+        count = matching_ingredient_counter_on_row(ingredients, row)
+        matching_ingredient_df[index] = count
+    sorted_dict = dict(sorted(matching_ingredient_df.items(), key=lambda item: item[1], reverse=True))
+    return sorted_dict
+
+def matching_tags_counter_on_df(tags, df):
+    matching_ingredient_df = {}
+    for index, row in df.iterrows():
+        count = matching_tags_counter_on_row(tags, row)
+        matching_ingredient_df[index] = count
+    sorted_dict = dict(sorted(matching_ingredient_df.items(), key=lambda item: item[1], reverse=True))
+    return sorted_dict
+
+            
+    
+
 
 
