@@ -72,3 +72,20 @@ def get_dataset_with_specific_columns(df, column_list):
 
 
 
+def add_column_to_current_df(raw_df, df, column_name_added, common_collumn_name):
+    '''
+    Private methods
+
+    Adds a new column from a raw DataFrame to the existing DataFrame by merging on a common column.
+
+    Args:
+        raw_df (pd.DataFrame): DataFrame containing the column to add.
+        df (pd.DataFrame): The original DataFrame to which the column will be added.
+        column_name_added (str): Name of the column in raw_df to add to df.
+        common_collumn_name (str): Column name common to both DataFrames to perform the merge on.
+
+    Returns:
+        pd.DataFrame: Updated DataFrame with the new column added.
+    '''
+    df = pd.merge(df, raw_df[[*common_collumn_name, column_name_added]],on=common_collumn_name, how='left')
+    return df
