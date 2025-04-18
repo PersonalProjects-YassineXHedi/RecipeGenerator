@@ -1,26 +1,30 @@
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 
 def ingredient_frequency_graph(df):
     """
-    Visualizes the top 80 most common ingredients in a bar chart.
+    Visualizes the top 80 most common ingredients in a horizontal bar chart with labels.
 
     Args:
-        df_sorted_ingridient (pandas.DataFrame): A DataFrame that must contain 
-            at least two columns: 'ingredient' (str) and 'count' (int), 
-            sorted in descending order by 'count'.
+        df (pandas.DataFrame): Must have 'ingredients' and 'count' columns.
 
     Returns:
-        None: Displays a bar chart of ingredient counts.
+        None
     """
     df_sorted_ingridient = sorted_ingridient_counter_df(df)
     df_sorted_ingridient = df_sorted_ingridient.head(80)
-    plt.figure(figsize=(20, 8))
-    plt.bar(df_sorted_ingridient['ingredients'], df_sorted_ingridient['count'])
-    plt.xlabel('Ingredients', fontsize=6)
-    plt.ylabel('Count')
-    plt.title('Ingredient Count (Sorted)')
-    plt.xticks(rotation=90, fontsize=6)
+
+    plt.figure(figsize=(10, 10))  # Adjust width and height
+    plt.barh(df_sorted_ingridient['ingredients'], df_sorted_ingridient['count'], color='steelblue')
+    plt.xlabel('Count')
+    plt.ylabel('Ingredients')
+    plt.title('Top 80 Ingredient Counts')
+
+    # Add labels to each bar
+    for i, (count) in enumerate(df_sorted_ingridient['count']):
+        plt.text(count + 1, i, , va='center', fontsize=6)
+
+    plt.gca().invert_yaxis()  # So the highest count is at the top
     plt.tight_layout()
     plt.show()
 
