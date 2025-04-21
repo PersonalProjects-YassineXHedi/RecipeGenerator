@@ -90,6 +90,23 @@ def remove_keywords_from_ingredients_df(keywords_to_remove, df):
         df.loc[index , 'ingredients'] = modified_ingredients
     return df 
 
+def remove_ingredients_from_df(ingredients_to_remove, df):
+    """
+    Removes specified keywords from the ingredients of the DataFrame.
+
+    Args:
+        keywords_to_remove (list): List of keywords to remove from ingredients.
+        df (pd.DataFrame): DataFrame with a column 'ingredients'.
+
+    Returns:
+        pd.DataFrame: Updated DataFrame with keywords removed from ingredients.
+    """
+    for index, row in df.iterrows():
+        modified_ingredients = remove_ingredients_from_row(ingredients_to_remove, row)
+        df.loc[index , 'ingredients'] = modified_ingredients
+    return df
+
+
 def get_all_words_in_ingredients_df(df):
     """
     Extracts all words from the 'ingredients' column across all rows in the DataFrame.
@@ -263,3 +280,24 @@ def is_row_to_remove(ingredients_to_remove, row):
         if ingredient in ingredients_to_remove:
             return True
     return False
+
+def remove_ingredients_from_row(ingredients_to_remove, row):
+    """
+    Private method
+    
+    Removes specified ingredients from a single row's ingredient list.
+
+    Args:
+        ingredients_to_remove (list): List of ingredient strings to remove.
+        row (pd.Series): A DataFrame row containing a column 'ingredients' 
+                         which holds a list of ingredient strings.
+
+    Returns:
+        list: A filtered list of ingredients with the specified ones removed.
+    """
+    recipe_ingredients = row['ingredients']
+    final_ingredients = []
+    for ingredient in recipe_ingredients:
+        if ingredient not in ingredients_to_remove:
+            final_ingredients.append(ingredient)
+    return final_ingredients
