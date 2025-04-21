@@ -40,7 +40,7 @@ def save_df_csv(df, file_name, path_data_folder):
 
 #private methods
 
-def get_salad_dataset(path_data_folder):
+def get_salad_dataset(path_data_folder, file_name):
     '''
         Private methods
 
@@ -48,11 +48,12 @@ def get_salad_dataset(path_data_folder):
 
         Args:
             path_data_folder (str): Path to the folder containing the dataset.
+            file_name (str): Name of the CSV file (without extension).
 
         Returns:
-            pd.DataFrame: The loaded DataFrame from 'salad_dataset.csv'.
+            pd.DataFrame: The loaded DataFrame from csv file.
     '''
-    recipes_file_path = path_data_folder + "/salad_dataset.csv"
+    recipes_file_path = path_data_folder + "/"+ file_name+".csv"
     return pd.read_csv(recipes_file_path)
 
 def get_dataset_with_specific_columns(df, column_list):
@@ -72,7 +73,7 @@ def get_dataset_with_specific_columns(df, column_list):
 
 
 
-def add_column_to_current_df(raw_df, df, column_name_added, common_collumn_name):
+def add_column_to_current_df(raw_df, df, column_name_list_added, common_collumn_name):
     '''
     Private methods
 
@@ -82,10 +83,13 @@ def add_column_to_current_df(raw_df, df, column_name_added, common_collumn_name)
         raw_df (pd.DataFrame): DataFrame containing the column to add.
         df (pd.DataFrame): The original DataFrame to which the column will be added.
         column_name_added (str): Name of the column in raw_df to add to df.
-        common_collumn_name (str): Column name common to both DataFrames to perform the merge on.
+        common_collumn_name (list): Common columns to both DataFrames to perform the merge on.
 
     Returns:
         pd.DataFrame: Updated DataFrame with the new column added.
     '''
-    df = pd.merge(df, raw_df[[*common_collumn_name, column_name_added]],on=common_collumn_name, how='left')
-    return df
+    input = df 
+    for column in  column_name_list_added:
+        output = pd.merge(input, raw_df[[*common_collumn_name, column]],on=common_collumn_name, how='left')
+        input = output
+    return output
