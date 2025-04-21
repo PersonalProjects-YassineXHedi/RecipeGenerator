@@ -1,4 +1,7 @@
 import pandas as pd
+import sqlite3
+import os 
+
 from dataset_helper import change_df_tags_column_to_list, change_df_ingredients_column_to_list, create_salad_dataset
 
 def create_salad_df_from_initial_df(path_data_folder, column_list = ['name', 'tags', 'description', 'ingredients']):
@@ -37,6 +40,23 @@ def save_df_csv(df, file_name, path_data_folder):
     """
     file_path = path_data_folder + '/' + file_name + '.csv'
     df.to_csv(file_path, index=False)
+
+def tranform_df_from_csv_to_sqlite(path_data_folder, file_name):
+    """
+    Loads a CSV file as a DataFrame and saves it as a SQLite database.
+
+    Args:
+        path_data_folder (str): Path to the folder containing the CSV file.
+        file_name (str): Name of the CSV file (without extension) and target database name.
+
+    Returns:
+        None
+    """
+    df = get_salad_dataset(path_data_folder, file_name)
+    db_path = os.path.join(path_data_folder, file_name + '.db')
+    connexion = sqlite3.connect(db_path)
+    df.to_sql("recipes_v1", connexion, if_exists="replace", index=False)
+
 
 #private methods
 
