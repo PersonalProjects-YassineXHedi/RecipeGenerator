@@ -1,26 +1,30 @@
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 
 def ingredient_frequency_graph(df):
     """
-    Visualizes the top 80 most common ingredients in a bar chart.
+    Visualizes the top 80 most common ingredients in a horizontal bar chart with labels.
 
     Args:
-        df_sorted_ingridient (pandas.DataFrame): A DataFrame that must contain 
-            at least two columns: 'ingredient' (str) and 'count' (int), 
-            sorted in descending order by 'count'.
+        df (pandas.DataFrame): Must have 'ingredients' and 'count' columns.
 
     Returns:
-        None: Displays a bar chart of ingredient counts.
+        None
     """
     df_sorted_ingridient = sorted_ingridient_counter_df(df)
     df_sorted_ingridient = df_sorted_ingridient.head(80)
-    plt.figure(figsize=(20, 8))
-    plt.bar(df_sorted_ingridient['ingredients'], df_sorted_ingridient['count'])
-    plt.xlabel('Ingredients', fontsize=6)
-    plt.ylabel('Count')
-    plt.title('Ingredient Count (Sorted)')
-    plt.xticks(rotation=90, fontsize=6)
+
+    plt.figure(figsize=(10, 10))  # Adjust width and height
+    plt.barh(df_sorted_ingridient['ingredients'], df_sorted_ingridient['count'], color='steelblue')
+    plt.xlabel('Count')
+    plt.ylabel('Ingredients')
+    plt.title('Top 80 Ingredient Counts')
+
+    # Add labels to each bar
+    for i, (count) in enumerate(df_sorted_ingridient['count']):
+        plt.text(count + 1, i,str(count) , va='center', fontsize=6)
+
+    plt.gca().invert_yaxis()  # So the highest count is at the top
     plt.tight_layout()
     plt.show()
 
@@ -62,3 +66,28 @@ def sorted_ingridient_counter_df(df):
     df_ingredient = pd.DataFrame(df_ingredient)   
     df_sorted = df_ingredient.sort_values(by=['count'], ascending=False)   
     return df_sorted
+
+def get_ingredients_after_top_n_from_ing_count_df(n, df):
+    """
+    Extracts the first n ingredient names from a DataFrame containing an 'ingredients' column.
+
+    Args:
+        n (int): The number of ingredient names to extract.
+        df (pd.DataFrame): A DataFrame with a column named 'ingredients' 
+                           containing ingredient names (typically sorted by frequency).
+
+    Returns:
+        list: A list containing the first n ingredient names from the DataFrame.
+    """
+    sorted_list_ingredients = df['ingredients']
+    chosen_ingredients = []
+    i=0
+    for ingredient in sorted_list_ingredients:
+        i +=1
+        if(i <= n):
+            continue
+        chosen_ingredients.append(ingredient)
+    return chosen_ingredients
+    
+
+    
