@@ -43,7 +43,7 @@ def save_df_csv(df, file_name, path_data_folder):
 
 def tranform_df_from_csv_to_sqlite(path_data_folder, file_name):
     """
-    Loads a CSV file as a DataFrame and saves it as a SQLite database.
+    Loads a CSV file as a DataFrame and saves it as a SQLite database in the specified path.
 
     Args:
         path_data_folder (str): Path to the folder containing the CSV file.
