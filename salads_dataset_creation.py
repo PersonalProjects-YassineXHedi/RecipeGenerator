@@ -1,10 +1,11 @@
 import pandas as pd
 import sqlite3
 import os 
+import json
 
 from dataset_helper import change_df_tags_column_to_list, change_df_ingredients_column_to_list, create_salad_dataset
 
-def create_salad_df_from_initial_df(path_data_folder, column_list = ['name', 'tags', 'description', 'ingredients']):
+def create_salad_df_from_initial_df(path_data_folder, file_name):
     """
     Creates a DataFrame filtered with specific columns.
 
@@ -14,13 +15,13 @@ def create_salad_df_from_initial_df(path_data_folder, column_list = ['name', 'ta
     Args:
         path_data_folder (str): Path to the folder containing the dataset file.
         column_list (list, optional): List of columns to keep in the final DataFrame. 
-                                      Defaults to ['name', 'tags', 'description', 'ingredients'].
+                                      Defaults to ['name', 'tags', 'description', 'ingredients','steps','minutes'].
 
     Returns:
         pd.DataFrame: A DataFrame containing only salad-related rows and the selected columns.
     """
-    df = get_salad_dataset(path_data_folder)
-    df = get_dataset_with_specific_columns(df,column_list)
+    df = get_salad_dataset(path_data_folder,file_name)
+    df = get_dataset_with_specific_columns(df,['name', 'tags', 'description', 'ingredients','steps'])
     change_df_tags_column_to_list(df)
     change_df_ingredients_column_to_list(df)
     return create_salad_dataset(df)
@@ -52,10 +53,29 @@ def tranform_df_from_csv_to_sqlite(path_data_folder, file_name):
     Returns:
         None
     """
-    df = get_salad_dataset(path_data_folder, file_name)
+    df = create_salad_df_from_initial_df(path_data_folder, file_name)
+    df = transform_df_lists_to_json_array_format(df,['ingredients','tags'])
     db_path = os.path.join(path_data_folder, file_name + '.db')
     connexion = sqlite3.connect(db_path)
     df.to_sql("recipes_v1", connexion, if_exists="replace", index=False)
+
+def transform_df_lists_to_json_array_format(df, columns_to_transform):
+    """
+    Converts list values in specified DataFrame columns to JSON array strings.
+
+    From ['a','b','c'] to ["a","b","c"]
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing columns with Python lists.
+        columns_to_transform (list[str]): List of column names to convert to JSON format.
+
+    Returns:
+        None: The DataFrame is modified in-place.
+    """
+    for column in columns_to_transform:
+        df[column] = df[column].apply(json.dumps)
+    return df
+    
 
 
 #private methods
