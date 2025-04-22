@@ -5,20 +5,24 @@ import json
 
 from dataset_helper import change_df_tags_column_to_list, change_df_ingredients_column_to_list, create_salad_dataset
 
-def create_salad_df_from_initial_df(path_data_folder, file_name):
+def create_salad_df_from_initial_df(path_data_folder, file_name, column_list = ['name', 'tags', 'description', 'ingredients','steps']):
     """
-    Creates a DataFrame filtered with specific columns.
+    Loads a dataset, filters specific columns, parses stringified lists, and extracts salad-related entries.
 
-    This function loads a dataset from the given folder path, selects only the specified columns,
-    converts string-encoded tags and ingredients to lists, and filters the rows related to salads.
+    This function:
+    - Loads a raw dataset from the specified folder and file name.
+    - Selects only the specified columns from the dataset.
+    - Converts the 'tags' and 'ingredients' columns from string representations to actual Python lists.
+    - Filters the dataset to include only rows related to salads.
 
     Args:
         path_data_folder (str): Path to the folder containing the dataset file.
-        column_list (list, optional): List of columns to keep in the final DataFrame. 
-                                      Defaults to ['name', 'tags', 'description', 'ingredients','steps','minutes'].
+        file_name (str): Name of the dataset file (without extension).
+        column_list (list, optional): List of columns to retain in the resulting DataFrame.
+            Defaults to ['name', 'tags', 'description', 'ingredients', 'steps'].
 
     Returns:
-        pd.DataFrame: A DataFrame containing only salad-related rows and the selected columns.
+        pd.DataFrame: A cleaned and filtered DataFrame containing salad recipes only.
     """
     df = get_salad_dataset(path_data_folder,file_name)
     df = get_dataset_with_specific_columns(df,['name', 'tags', 'description', 'ingredients','steps'])
