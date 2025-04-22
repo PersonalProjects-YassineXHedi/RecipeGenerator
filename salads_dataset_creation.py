@@ -1,26 +1,31 @@
 import pandas as pd
 import sqlite3
 import os 
+import json
 
 from dataset_helper import change_df_tags_column_to_list, change_df_ingredients_column_to_list, create_salad_dataset
 
-def create_salad_df_from_initial_df(path_data_folder, column_list = ['name', 'tags', 'description', 'ingredients']):
+def create_salad_df_from_initial_df(path_data_folder, file_name, column_list = ['name', 'tags', 'description', 'ingredients','steps']):
     """
-    Creates a DataFrame filtered with specific columns.
+    Loads a dataset, filters specific columns, parses stringified lists, and extracts salad-related entries.
 
-    This function loads a dataset from the given folder path, selects only the specified columns,
-    converts string-encoded tags and ingredients to lists, and filters the rows related to salads.
+    This function:
+    - Loads a raw dataset from the specified folder and file name.
+    - Selects only the specified columns from the dataset.
+    - Converts the 'tags' and 'ingredients' columns from string representations to actual Python lists.
+    - Filters the dataset to include only rows related to salads.
 
     Args:
         path_data_folder (str): Path to the folder containing the dataset file.
-        column_list (list, optional): List of columns to keep in the final DataFrame. 
-                                      Defaults to ['name', 'tags', 'description', 'ingredients'].
+        file_name (str): Name of the dataset file (without extension).
+        column_list (list, optional): List of columns to retain in the resulting DataFrame.
+            Defaults to ['name', 'tags', 'description', 'ingredients', 'steps'].
 
     Returns:
-        pd.DataFrame: A DataFrame containing only salad-related rows and the selected columns.
+        pd.DataFrame: A cleaned and filtered DataFrame containing salad recipes only.
     """
-    df = get_salad_dataset(path_data_folder)
-    df = get_dataset_with_specific_columns(df,column_list)
+    df = get_salad_dataset(path_data_folder,file_name)
+    df = get_dataset_with_specific_columns(df,['name', 'tags', 'description', 'ingredients','steps'])
     change_df_tags_column_to_list(df)
     change_df_ingredients_column_to_list(df)
     return create_salad_dataset(df)
@@ -52,10 +57,29 @@ def tranform_df_from_csv_to_sqlite(path_data_folder, file_name):
     Returns:
         None
     """
-    df = get_salad_dataset(path_data_folder, file_name)
+    df = create_salad_df_from_initial_df(path_data_folder, file_name)
+    df = transform_df_lists_to_json_array_format(df,['ingredients','tags'])
     db_path = os.path.join(path_data_folder, file_name + '.db')
     connexion = sqlite3.connect(db_path)
     df.to_sql("recipes_v1", connexion, if_exists="replace", index=False)
+
+def transform_df_lists_to_json_array_format(df, columns_to_transform):
+    """
+    Converts list values in specified DataFrame columns to JSON array strings.
+
+    From ['a','b','c'] to ["a","b","c"]
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing columns with Python lists.
+        columns_to_transform (list[str]): List of column names to convert to JSON format.
+
+    Returns:
+        None: The DataFrame is modified in-place.
+    """
+    for column in columns_to_transform:
+        df[column] = df[column].apply(json.dumps)
+    return df
+    
 
 
 #private methods
