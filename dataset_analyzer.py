@@ -143,6 +143,29 @@ def get_all_diff_ingredients_with_keyword_df(keyword, df):
                 ingredients_containing_keyword.append(ingredient)
     return ingredients_containing_keyword
 
+def get_all_ingredient_df(df):
+    """
+    Extracts all unique ingredients from a DataFrame.
+
+    Iterates through the 'ingredients' column, which contains lists of ingredients for each recipe,
+    and returns a list of all distinct ingredients found across the entire DataFrame.
+
+    Args:
+        df (pd.DataFrame): A DataFrame with a column named 'ingredients',
+                           where each row contains a list of ingredient strings.
+
+    Returns:
+        list: A list of unique ingredient names present in the DataFrame.
+    """
+    all_ingredients = []
+    for index,row in df.iterrows():
+        ingredients_list = row['ingredients']
+        for ingredient in ingredients_list:
+            all_ingredients.append(ingredient)
+    return list(set(all_ingredients))
+
+
+
 
 #Private method
 
