@@ -25,7 +25,7 @@ def create_salad_df_from_initial_df(path_data_folder, file_name, column_list = [
         pd.DataFrame: A cleaned and filtered DataFrame containing salad recipes only.
     """
     df = get_salad_dataset(path_data_folder,file_name)
-    df = get_dataset_with_specific_columns(df,['name', 'tags', 'description', 'ingredients','steps'])
+    df = get_dataset_with_specific_columns(df,column_list)
     change_df_tags_column_to_list(df)
     change_df_ingredients_column_to_list(df)
     return create_salad_dataset(df)
